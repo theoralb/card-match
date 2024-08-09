@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -20,7 +21,9 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
     private void Start()
     {
-        cardImage.color = Color.gray;
+        var color = Color.white;
+        color.a = 0.2f;
+        cardImage.color = color;
     }
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -46,7 +49,9 @@ public class Card : MonoBehaviour , IPointerClickHandler
         }
         transform.eulerAngles = new Vector3(0, 0, 0);
 
-        cardImage.color = Color.blue;
+        var color = Color.yellow;
+        color.a = 0.4f;
+        cardImage.color = color;
         Label.text = this.Id.ToString();
         yield return new WaitForSeconds(0.3f);
         if (controller.First == null)
@@ -106,7 +111,9 @@ public class Card : MonoBehaviour , IPointerClickHandler
         }
         transform.eulerAngles = new Vector3(0, 0, 0);
         Label.text = "";
-        cardImage.color = Color.gray;
+        var color = Color.white;
+        color.a = 0.2f;
+        cardImage.color = color;
         blockFlip = false;
     }
 
