@@ -5,9 +5,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
-using UnityEngine.Windows;
+
 
 public class GameController : MonoBehaviour
 {
@@ -27,6 +26,9 @@ public class GameController : MonoBehaviour
     public int Turn = 0;
     public int Match = 0;
     public int Score = 0;
+
+    public List<Card> AllCard { get => allCard; set => allCard = value; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,7 +85,7 @@ public class GameController : MonoBehaviour
 
 
         //clear cards
-        foreach (var card in allCard)
+        foreach (var card in AllCard)
         {
             if (card != null)
             {
@@ -91,7 +93,7 @@ public class GameController : MonoBehaviour
             }            
         }
 
-        allCard.Clear();
+        AllCard.Clear();
 
         //cards Display
         for (int i = 0; i < col * row; i++)
@@ -107,7 +109,7 @@ public class GameController : MonoBehaviour
             card.Label.text = card.Id.ToString();
             card.Label.text = "";
             card.transform.localPosition = Vector3.right*(i%col)*150f + Vector3.down*(i/col)*230f;
-            allCard.Add(card);
+            AllCard.Add(card);
         }
 
         buttonText.text = "Start";
@@ -153,6 +155,9 @@ public class GameController : MonoBehaviour
 
     public void StartGame()
     {
+        Turn = 0;
+        Match = 0;
+        Score = 0;
         gameStage = "play";
         buttonText.text = "Reset";
     }

@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,7 +11,12 @@ public class Card : MonoBehaviour , IPointerClickHandler
     public bool blockFlip = false;
     [SerializeField] private Image cardImage;
     [SerializeField]private GameController controller;
+    [SerializeField] private AudioController audioController;
     public TextMeshProUGUI Label;
+
+
+
+
 
     private void Start()
     {
@@ -35,6 +38,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
         }
 
         blockFlip = true;
+        audioController.PlayEffect(audioController.FlipSound);
         for (int i = 0;i<10;i++)
         {
             transform.eulerAngles = new Vector3(0, i*18, 0); 
@@ -59,12 +63,14 @@ public class Card : MonoBehaviour , IPointerClickHandler
             StartCoroutine(Hide());
             controller.First = null;
             controller.Match++;
+            audioController.PlayEffect(audioController.MatchSound);
         }
         else
         {
             StartCoroutine(controller.First.FlipBack());
             StartCoroutine(FlipBack());
             controller.First = null;
+            audioController.PlayEffect(audioController.WrongSound);
         }
         controller.Score = controller.Match * 50 - controller.Turn;
         if(controller.Score < 0)
@@ -83,6 +89,11 @@ public class Card : MonoBehaviour , IPointerClickHandler
         }
         controller.CardIDData[Index] = -1;
         blockFlip = false;
+        controller.AllCard.Remove(this);
+        if (controller.AllCard.Count == 0)
+        {
+            audioController.PlayEffect(audioController.EndSound);
+        }
         Destroy(gameObject);
     }
 
