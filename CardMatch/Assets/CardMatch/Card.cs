@@ -52,20 +52,24 @@ public class Card : MonoBehaviour , IPointerClickHandler
             yield break;
         }
 
-
+        controller.Turn++;
         if (controller.First.Id == this.Id)
         {
             StartCoroutine(controller.First.Hide());
             StartCoroutine(Hide());
             controller.First = null;
-
+            controller.Match++;
         }
         else
         {
             StartCoroutine(controller.First.FlipBack());
             StartCoroutine(FlipBack());
             controller.First = null;
-           
+        }
+        controller.Score = controller.Match * 50 - controller.Turn;
+        if(controller.Score < 0)
+        {
+            controller.Score = 0;
         }
     }
 

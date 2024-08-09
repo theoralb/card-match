@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
@@ -13,10 +14,15 @@ public class GameController : MonoBehaviour
     private int col = 4;
     private int row = 3;
     [SerializeField]private TextMeshProUGUI buttonText;
+    [SerializeField]private TextMeshProUGUI turnText;
+    [SerializeField]private TextMeshProUGUI matchText ;
+    [SerializeField]private TextMeshProUGUI scoreText;
     [SerializeField]private GameObject cardMaster;
     private List<Card> allCard = new List<Card>();
     public Card First;
-
+    public int Turn = 0;
+    public int Match = 0;
+    public int Score = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +32,7 @@ public class GameController : MonoBehaviour
 
     IEnumerator GameStateController()
     {
-        ResetCard();
+       ResetCard();
        yield return null;
     }
 
@@ -137,6 +143,8 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        turnText.text = "Turn: " + Turn;
+        matchText.text = "Turn: " + Match;
+        scoreText.text = "Score: " + Score;
     }
 }
