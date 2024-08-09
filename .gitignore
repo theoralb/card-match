@@ -47,6 +47,7 @@ ExportedObj/
 *.pdb
 *.opendb
 *.VC.db
+*.vs
 .vscode/
 .idea/
 # Unity3D generated file on crash reports
