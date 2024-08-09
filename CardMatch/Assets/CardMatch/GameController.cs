@@ -10,11 +10,12 @@ public class GameController : MonoBehaviour
 {
     private int[] cardIDData;
     private string gameStage = "ready";
-    private int col = 2;
-    private int row = 2;
+    private int col = 4;
+    private int row = 3;
     [SerializeField]private TextMeshProUGUI buttonText;
     [SerializeField]private GameObject cardMaster;
     private List<Card> allCard = new List<Card>();
+    public Card First;
 
     // Start is called before the first frame update
     void Start()
@@ -25,13 +26,7 @@ public class GameController : MonoBehaviour
 
     IEnumerator GameStateController()
     {
-        // Draw UI finish by editor setup
-        // Prepare Card Table
         ResetCard();
-       // Count-Down  3 - 2 - 1 GO!
-
-       // Wait Playing State
-
        yield return null;
     }
 
@@ -70,7 +65,10 @@ public class GameController : MonoBehaviour
         //clear cards
         foreach (var card in allCard)
         {
-            Destroy(card.gameObject,0.1f);
+            if (card != null)
+            {
+                Destroy(card.gameObject);
+            }            
         }
 
         allCard.Clear();
@@ -79,14 +77,22 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < col * row; i++)
         {
             var card = Instantiate(cardMaster.gameObject,cardMaster.transform.parent).GetComponent<Card>();
+            card.gameObject.SetActive(true);
             card.Id = cardIDData[i];
             card.Index = i;
             card.Label.text = card.Id.ToString();
+            card.Label.text = "";
             card.transform.localPosition = Vector3.right*(i%col)*150f + Vector3.down*(i/col)*230f;
             allCard.Add(card);
         }
 
         buttonText.text = "Start";
+        StartGame();
+    }
+
+    public bool CanFlip()
+    {
+        return gameStage == "play";
     }
 
 
