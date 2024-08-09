@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/CardMatch.unity
+    guid: 3d21560554e8dd04cba8378ffa4d292c
   m_configObjects: {}
