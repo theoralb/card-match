@@ -81,6 +81,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
             transform.localScale = transform.localScale * 0.7f ;
             yield return new WaitForSeconds(0.02f);
         }
+        controller.CardIDData[Index] = -1;
         blockFlip = false;
         Destroy(gameObject);
     }

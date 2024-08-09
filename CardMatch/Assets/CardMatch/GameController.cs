@@ -1,18 +1,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
+using UnityEngine.Windows;
 
 public class GameController : MonoBehaviour
 {
-    private int[] cardIDData;
+    public int[] CardIDData;
     private string gameStage = "ready";
     private int col = 4;
     private int row = 3;
+    [SerializeField] private Slider rowSlide;
+    [SerializeField] private Slider colSlide;
     [SerializeField]private TextMeshProUGUI buttonText;
     [SerializeField]private TextMeshProUGUI turnText;
     [SerializeField]private TextMeshProUGUI matchText ;
@@ -57,16 +61,26 @@ public class GameController : MonoBehaviour
     }
 
 
-    public void ResetCard()
+    public void ResetCard(int[] inData=null,int inCol=-1,int inRow = -1 )
     {
-
-        cardIDData = new int[col * row];
-        //card Data
-        for (int i = 0; i < col * row; i++)
+        if (inData == null)
         {
-            cardIDData[i] = (i / 2) + 1;
+            CardIDData = new int[col * row];
+            //card Data
+            for (int i = 0; i < col * row; i++)
+            {
+                CardIDData[i] = (i / 2) + 1;
+            }
+            SecureShuffle(CardIDData);
+        }else
+        {
+            CardIDData = inData;
+            col = inCol;
+            row = inRow;
         }
-        SecureShuffle(cardIDData);
+
+
+
 
         //clear cards
         foreach (var card in allCard)
@@ -82,9 +96,13 @@ public class GameController : MonoBehaviour
         //cards Display
         for (int i = 0; i < col * row; i++)
         {
+            if (CardIDData[i] < 1)
+            {
+                continue;
+            }
             var card = Instantiate(cardMaster.gameObject,cardMaster.transform.parent).GetComponent<Card>();
             card.gameObject.SetActive(true);
-            card.Id = cardIDData[i];
+            card.Id = CardIDData[i];
             card.Index = i;
             card.Label.text = card.Id.ToString();
             card.Label.text = "";
@@ -139,12 +157,37 @@ public class GameController : MonoBehaviour
         buttonText.text = "Reset";
     }
 
+    public void Save()
+    {
+        var write = string.Join(",", CardIDData) + $":{col},{row},{Turn},{Match},{Score}" ;
+        PlayerPrefs.SetString("save", write);
+        Debug.Log(write);
+    }
+
+    public void Load()
+    {
+        var read = PlayerPrefs.GetString("save");
+      
+        if (!string.IsNullOrEmpty(read))
+        {
+            var reads = read.Split(':');
+            int[] data = reads[0].Split(',').Select(int.Parse).ToArray();
+            int[] param = reads[1].Split(',').Select(int.Parse).ToArray();
+            Turn = param[2];
+            Match = param[3];
+            Score = param[4];
+            rowSlide.value = param[0];
+            colSlide.value = param[1];
+            ResetCard(data, param[0], param[1]);
+        }
+    }
+
 
     // Update is called once per frame
     void Update()
     {
         turnText.text = "Turn: " + Turn;
-        matchText.text = "Turn: " + Match;
+        matchText.text = "Match: " + Match;
         scoreText.text = "Score: " + Score;
     }
 }
