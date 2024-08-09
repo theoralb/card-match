@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
@@ -7,11 +8,13 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private int[] cardIDData;
-    [SerializeField]private string gameStage = "ready";
-    [SerializeField]private int col = 2;
-    [SerializeField]private int row = 1;
+    private int[] cardIDData;
+    private string gameStage = "ready";
+    private int col = 2;
+    private int row = 2;
     [SerializeField]private TextMeshProUGUI buttonText;
+    [SerializeField]private GameObject cardMaster;
+    private List<Card> allCard = new List<Card>();
 
     // Start is called before the first frame update
     void Start()
@@ -55,13 +58,33 @@ public class GameController : MonoBehaviour
 
     public void ResetCard()
     {
+
         cardIDData = new int[col * row];
+        //card Data
         for (int i = 0; i < col * row; i++)
         {
             cardIDData[i] = (i / 2) + 1;
         }
         SecureShuffle(cardIDData);
 
+        //clear cards
+        foreach (var card in allCard)
+        {
+            Destroy(card.gameObject,0.1f);
+        }
+
+        allCard.Clear();
+
+        //cards Display
+        for (int i = 0; i < col * row; i++)
+        {
+            var card = Instantiate(cardMaster.gameObject,cardMaster.transform.parent).GetComponent<Card>();
+            card.Id = cardIDData[i];
+            card.Index = i;
+            card.Label.text = card.Id.ToString();
+            card.transform.localPosition = Vector3.right*(i%col)*150f + Vector3.down*(i/col)*230f;
+            allCard.Add(card);
+        }
 
         buttonText.text = "Start";
     }
